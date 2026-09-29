@@ -5,6 +5,7 @@ import Analytics from "./pages/Analytics";
 import Revenue from "./pages/Revenue";
 import Auth from "./components/Auth";
 import ProtectedRoute from "./components/ProtectedRoute"; // <-- Make sure this is imported!
+import Audience from "./pages/Audience";
 
 // 1. Create a layout specifically for logged-in users
 function DashboardLayout({ children }) {
@@ -23,7 +24,7 @@ function App() {
     <Router>
       <Routes>
         {/* PUBLIC ROUTE: Login screen (No Sidebar) */}
-        <Route path="/Auth" element={<Auth />} />
+        <Route path="/auth" element={<Auth />} />
 
         {/* PROTECTED ROUTES: Only accessible with a token */}
         <Route 
@@ -36,6 +37,7 @@ function App() {
                   <Route path="/" element={<Overview />} />
                   <Route path="/analytics" element={<Analytics />} />
                   <Route path="/revenue" element={<Revenue />} />
+                   <Route path="/audience" element={<Audience/>}/>
                 </Routes>
               </DashboardLayout>
             </ProtectedRoute>
