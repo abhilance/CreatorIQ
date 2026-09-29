@@ -11,9 +11,31 @@ export default function Auth() {
     e.preventDefault();
     
     if (isLogin) {
-      console.log("Logging in with:", { email, password });
-      // We will build the login route next!
-      alert("Login route coming soon!");
+      // --- REAL LOGIN LOGIC ---
+      try {
+        const response = await fetch("http://127.0.0.1:8000/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Save the digital VIP pass to the browser
+          localStorage.setItem("token", data.access_token);
+          // Immediately redirect to the protected dashboard
+          navigate('/');
+        } else {
+          alert(`Error: ${data.detail}`);
+        }
+      } catch (error) {
+        console.error("Login failed:", error);
+        alert("Could not connect to the server. Is the Python backend running?");
+      }
+
     } else {
       // --- REAL SIGNUP LOGIC ---
       try {
@@ -28,12 +50,10 @@ export default function Auth() {
         const data = await response.json();
 
         if (response.ok) {
-// Save the digital VIP pass to the browser
-          localStorage.setItem("token", data.access_token);
-          // Immediately redirect to the protected dashboard
-          navigate('/dashboard');
+          alert("Account created successfully! You can now sign in.");
+          setIsLogin(true); // Switch back to login view automatically
+          setPassword(''); // Clear the password field
         } else {
-          // If the backend sends an error (like "Email already registered")
           alert(`Error: ${data.detail}`);
         }
       } catch (error) {
